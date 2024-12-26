@@ -1,0 +1,60 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model House {
+  id                Int      @id @default(autoincrement())
+  name              String
+  address           String
+  description       String
+  phone             String
+  latitude          Float
+  longitude         Float
+  closeTime         String
+  rating           Int
+  allowedVehicles   String
+  ownerId           Int
+  facilities        Facility[]
+  comments          Comment[]
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  owner             User     @relation("OwnerHouses", fields: [ownerId], references: [id]) // Quan hệ với User
+}
+
+model User {
+  id                Int      @id @default(autoincrement())
+  username          String   @unique
+  email             String   @unique
+  password          String
+  role              String   // Thay enum bằng String
+  housesOwned       House[]  @relation("OwnerHouses") // Quan hệ ngược lại từ User đến House
+  comments          Comment[]
+}
+
+model Facility {
+  id                Int     @id @default(autoincrement())
+  houseId           Int
+  name              String
+  type              String
+  value             String
+
+  house             House   @relation(fields: [houseId], references: [id])
+}
+
+model Comment {
+  id                Int     @id @default(autoincrement())
+  houseId           Int
+  userId            Int
+  content           String
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  house             House   @relation(fields: [houseId], references: [id])
+  user              User    @relation(fields: [userId], references: [id])
+}
