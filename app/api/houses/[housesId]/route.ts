@@ -1,46 +1,41 @@
-import { NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
+import { NextResponse } from "next/server";
+import { db } from "@/lib/db";
 
-const prisma = new PrismaClient();
-
-// GET: Fetch a specific house by ID
+// Lấy thông tin chi tiết một nhà/phòng
 export async function GET(req: Request, { params }: { params: { id: string } }) {
-  try {
-    const house = await prisma.house.findUnique({
-      where: { id: parseInt(params.id) },
-    });
+  const { id } = params;
 
-    if (!house) {
-      return NextResponse.json({ error: 'House not found' }, { status: 404 });
-    }
+  const house = await db.house.findUnique({
+    where: { id: parseInt(id) },
+  });
 
-    return NextResponse.json(house, { status: 200 });
-  } catch (error) {
-    return NextResponse.json({ error: 'Failed to fetch house' }, { status: 500 });
+  if (!house) {
+    return NextResponse.json({ error: "House not found" }, { status: 404 });
   }
+
+  return NextResponse.json(house);
 }
 
-// PUT: Update a specific house by ID
+// Sửa thông tin nhà/phòng
 export async function PUT(req: Request, { params }: { params: { id: string } }) {
-  try {
-    const data = await req.json();
-    const updatedHouse = await prisma.house.update({
-      where: { id: parseInt(params.id) },
-      data,
-    });
+  const { id } = params;
+  const data = await req.json();
 
-    return NextResponse.json(updatedHouse, { status: 200 });
-  } catch (error) {
-    return NextResponse.json({ error: 'Failed to update house' }, { status: 500 });
-  }
+  const updatedHouse = await db.house.update({
+    where: { id: parseInt(id) },
+    data,
+  });
+
+  return NextResponse.json(updatedHouse);
 }
 
-// DELETE: Delete a specific house by ID
+// Xóa nhà/phòng
 export async function DELETE(req: Request, { params }: { params: { id: string } }) {
-  try {
-    await prisma.house.delete({ where: { id: parseInt(params.id) } });
-    return NextResponse.json({ message: 'House deleted successfully' }, { status: 200 });
-  } catch (error) {
-    return NextResponse.json({ error: 'Failed to delete house' }, { status: 500 });
-  }
+  const { id } = params;
+
+  await db.house.delete({
+    where: { id: parseInt(id) },
+  });
+
+  return NextResponse.json({ message: "House deleted successfully" });
 }
