@@ -32,29 +32,37 @@ const CreatePage = () => {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            title: ""
+            title: "",
         },
     });
 
     const { isSubmitting, isValid } = form.formState;
 
-   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    try {
-        const response = await axios.post("/api/houses", values);
-        router.push(`/ownerhome/${response.data.id}`);
-        toast.success("Course created");
-    } catch (error) {
-        console.error("Error creating course:", error); 
-        toast.error("Something went wrong: "); 
-    }
-};
-
+    const onSubmit = async (values: z.infer<typeof formSchema>) => {
+        try {
+            const houseData = {
+                ...values,
+                name: values.title || "Default House Name" // Set a default name if not provided
+            };
+            const response = await axios.post("/api/houses", houseData);
+            if (response.data.id) {
+                router.push(`/ownerhouse/houses/${response.data.id}`);
+                toast.success("Đã tạo bài đăng thành công");
+            } else {
+                toast.error("Không thể tạo bài đăng. Thử lại!");
+            }
+        } catch (error) {
+            console.error("Error creating new house:", error);
+            toast.error("Something went wrong. Please try again.");
+        }
+    };
+    
 
     return (
         <div className="max-w-5xl mx-auto flex md:items-center md:justify-center h-full p-6">
             <div>
                 <h1 className="text-2xl">
-                   Fast Home System
+                    Fast Home System
                 </h1>
                 <p className="text-sm text-slate-600">
                     Thêm trọ mới
@@ -78,7 +86,7 @@ const CreatePage = () => {
                                         />
                                     </FormControl>
                                     <FormDescription>
-                                       Chuẩn bị
+                                        Chuẩn bị bài đăng cho trọ mới
                                     </FormDescription>
                                     <FormMessage />
                                 </FormItem>

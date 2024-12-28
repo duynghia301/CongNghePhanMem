@@ -5,24 +5,31 @@ import { NextResponse } from "next/server";
 
 export async function PUT(req: Request, { params }: { params: { houseId: string } }) {
   try {
+    if (!params.houseId) {
+        return new NextResponse("House ID is required", { status: 400 });
+    }
+
     const { userId } = await auth();
+    const { houseId } = params;  // Get houseId from params
 
     if (!userId) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
-    // Kiểm tra xem chủ nhà có phải là chủ sở hữu của nhà/phòng không
     const house = await db.house.findUnique({
-      where: { id: params.houseId },
+      where: { id: houseId },  // Ensure houseId is passed correctly
     });
 
-    if (house?.userId !== userId) {
+    if (!house) {
+      return new NextResponse("House not found", { status: 404 });
+    }
+
+    if (house.userId !== userId) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
     const data = await req.json();
 
-    // Cập nhật nhà/phòng
     const updatedHouse = await db.house.update({
       where: { id: params.houseId },
       data,
@@ -30,39 +37,42 @@ export async function PUT(req: Request, { params }: { params: { houseId: string 
 
     return NextResponse.json(updatedHouse);
   } catch (error) {
-    console.error(error);
+    console.error("[HOUSE PUT ERROR]", error);
     return new NextResponse("Internal Error", { status: 500 });
   }
-
-  
 }
-
 
 export async function DELETE(req: Request, { params }: { params: { houseId: string } }) {
     try {
+      if (!params.houseId) {
+          return new NextResponse("House ID is required", { status: 400 });
+      }
+
       const { userId } = await auth();
   
       if (!userId) {
         return new NextResponse("Unauthorized", { status: 401 });
       }
   
-      // Kiểm tra xem chủ nhà có phải là chủ sở hữu của nhà/phòng không
       const house = await db.house.findUnique({
         where: { id: params.houseId },
       });
   
-      if (house?.userId !== userId) {
+      if (!house) {
+        return new NextResponse("House not found", { status: 404 });
+      }
+  
+      if (house.userId !== userId) {
         return new NextResponse("Unauthorized", { status: 401 });
       }
   
-      // Xóa nhà/phòng
-      const deletedHouse = await db.house.delete({
+      await db.house.delete({
         where: { id: params.houseId },
       });
   
-      return NextResponse.json(deletedHouse);
+      return new NextResponse(null, { status: 204 });
     } catch (error) {
-      console.error(error);
+      console.error("[HOUSE DELETE ERROR]", error);
       return new NextResponse("Internal Error", { status: 500 });
     }
-  }
+}

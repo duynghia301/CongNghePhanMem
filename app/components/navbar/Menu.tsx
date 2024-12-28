@@ -4,6 +4,7 @@ import { useCallback, useState } from "react";
 import { SignInButton, SignUpButton, useUser, UserButton } from '@clerk/nextjs';
 import Avatar from "../Avatar";
 import MenuItem from "./MenuItem";
+import Link from "next/link";
 
 const UserMenu = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -20,7 +21,10 @@ const UserMenu = () => {
                     onClick={() => {}}
                     className="hidden md:block text-sm font-semibold py-3 px-4 rounded-full hover:bg-neutral-100 transition cursor-pointer"
                 >
+                   
+                    <Link href="/ownerhouse/create">
                     Airbdn your home
+                    </Link>
                 </div>
                 <div
                     onClick={toggleOpen}

@@ -1,41 +1,51 @@
-"use client";
-
 import { db } from "@/lib/db";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-// import { AddressForm } from "./_components/address-form";
 import { DescriptionForm } from "./_components/description-form";
 import { ImageForm } from "./_components/image-form";
-// import { CategoryForm } from "./_components/category-form";
-// import { LocationForm } from "./_components/location-form";
-import { useTransition } from "react";
+import { AddressForm } from "./_components/adress_form";
 import { CategoryForm } from "./category-form";
+import { LocationForm } from "./_components/location_form";
 
 const HouseIdPage = async ({ params }: { params: { houseId: string } }) => {
   const { houseId } = params;
+  
+  // Authenticate user
   const { userId } = await auth();
-
   if (!userId) {
-    redirect("/dashboard");
+    redirect("/"); // Redirect if user is not authenticated
   }
 
+  // Fetch the house by houseId and userId
   const house = await db.house.findUnique({
-    where: { id: houseId, userId },
+    where: {
+      id: houseId,
+      userId: userId, // Ensures the house belongs to the current user
+    },
     include: {
-      attachments: { orderBy: { createdAt: "desc" } },
+      attachments: {
+        orderBy: { createdAt: "desc" },
+      },
+      category: true, // Include category details for the house
+      facilities: true, // Include associated facilities
+      comments: {
+        where: { deleted: false }, // Filter out deleted comments if needed
+      },
     },
   });
 
   if (!house) {
-    redirect("/");
+    redirect("/"); // Redirect if no house found
   }
 
+  // Fetch categories for the form dropdown
   const categories = await db.category.findMany({
     orderBy: { name: "asc" },
   });
 
+  // Calculate the completion status for the form
   const requiredFields = [
     house.address,
     house.description || "",
@@ -48,6 +58,7 @@ const HouseIdPage = async ({ params }: { params: { houseId: string } }) => {
   const completionText = `(${completedFields} / ${totalFields})`;
   const isComplete = requiredFields.every(Boolean);
 
+  // Define status options for dropdown
   const statusOptions = [
     { value: "PENDING", label: "Chờ duyệt" },
     { value: "APPROVED", label: "Công khai" },
@@ -55,17 +66,6 @@ const HouseIdPage = async ({ params }: { params: { houseId: string } }) => {
   ];
   const currentStatus =
     statusOptions.find((opt) => opt.value === house.status)?.label || "Không xác định";
-
-  const [isPending, startTransition] = useTransition();
-
-//   const updateStatus = (status: string) => {
-//     startTransition(async () => {
-//       await db.house.update({
-//         where: { id: house.id },
-//         data: { status },
-//       });
-//     });
-//   };
 
   return (
     <div className="p-6">
@@ -79,14 +79,11 @@ const HouseIdPage = async ({ params }: { params: { houseId: string } }) => {
         <div className="flex items-center gap-x-4">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button disabled={isPending}>{currentStatus}</Button>
+              <Button>{currentStatus}</Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
               {statusOptions.map((option) => (
-                <DropdownMenuItem
-                  key={option.value}
-                //   onClick={() => updateStatus(option.value)}
-                >
+                <DropdownMenuItem key={option.value}>
                   {option.label}
                 </DropdownMenuItem>
               ))}
@@ -97,14 +94,10 @@ const HouseIdPage = async ({ params }: { params: { houseId: string } }) => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-16">
         <div>
-          {/* <div className="flex items-center gap-x-2">
-            <IconBadge size="sm" />
-            <h2 className="text-xl">Thông tin bài đăng</h2>
-          </div> */}
-          {/* <AddressForm initialData={house} houseId={house.id} /> */}
+          <AddressForm initialData={house} houseId={house.id} />
           <DescriptionForm initialData={house} houseId={house.id} />
           <ImageForm initialData={house} houseId={house.id} />
-          <CategoryForm
+          <CategoryForm 
             initialData={house}
             houseId={house.id}
             options={categories.map((category) => ({
@@ -116,10 +109,9 @@ const HouseIdPage = async ({ params }: { params: { houseId: string } }) => {
         <div className="space-y-6">
           <div>
             <div className="flex items-center gap-x-2">
-              {/* <IconBadge size="sm" /> */}
               <h2 className="text-xl">Vị trí</h2>
             </div>
-            {/* <LocationForm initialData={house} houseId={house.id} /> */}
+            <LocationForm initialData={house} houseId={house.id} />
           </div>
         </div>
       </div>
