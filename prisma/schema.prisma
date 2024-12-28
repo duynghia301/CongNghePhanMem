@@ -6,60 +6,97 @@ datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
-
 model House {
-  id                Int      @id @default(autoincrement())
-  name              String
-  address           String
-  description       String
-  phone             String
-  latitude          Float
-  longitude         Float
-  closeTime         String
-  rating            Int
-  allowedVehicles   String
-  ownerId           Int
+  id                String   @id @default(uuid()) 
+  userId String
+  name              String?  @db.Text
+  address           String?  @db.Text
+  description       String? @db.Text
+  imageURL          String? @db.Text
+  phone             String?
+
+  categoryId  String?
+  category    Category?    @relation(fields: [categoryId], references: [id])
+
+
+  latitude          Float?
+  longitude         Float?
+  closeTime         String?
+  rating            Int    @default(5) 
+  allowedVehicles   String?
+
   facilities        Facility[]
+  attachments Attachment[]
   comments          Comment[]
+
+  status            HouseStatus @default(PENDING)  // Use Enum for better status management
+
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
 
-  owner             User     @relation("OwnerHouses", fields: [ownerId], references: [id]) // Quan hệ với User
-}
-
-model User {
-  id                Int      @id @default(autoincrement())
-  username          String   @unique
-  email             String   @unique
-  password          String
-  role              UserRole
-  housesOwned       House[]  @relation("OwnerHouses") // Quan hệ ngược lại từ User đến House
-  comments          Comment[]
+  @@index([categoryId])
+  @@index([status])
+  @@fulltext([name])
 
 }
+
+enum HouseStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model Category {
+  id     String   @id @default(uuid())
+  name   String   @unique
+  house House[]
+}
+
 enum UserRole {
-  ADMIN
-  OWNER
-  STUDENT
+  ADMIN  
+  OWNER   
+  STUDENT 
 }
+
 model Facility {
-  id                Int     @id @default(autoincrement())
-  houseId           Int
+  id                String   @id @default(uuid()) 
+  houseId           String  
   name              String
   type              String
   value             String
 
   house             House   @relation(fields: [houseId], references: [id])
-}
 
-model Comment {
-  id                Int     @id @default(autoincrement())
-  houseId           Int
-  userId            Int
-  content           String
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
 
+  @@index([houseId])  // Index for faster filtering by houseId
+}
+
+model Comment {
+  id                String   @id @default(uuid()) 
+  houseId           String   
+  userId            String  
+  content           String
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  deleted           Boolean  @default(false) // Soft delete flag
+
   house             House   @relation(fields: [houseId], references: [id])
-  user              User    @relation(fields: [userId], references: [id])
+
+  @@index([houseId]) // Index for faster lookups based on houseId
+  @@index([userId])  // Index for faster lookups based on userId
+}
+model Attachment {
+  id        String   @id @default(uuid())
+  name      String
+  url       String   @db.Text
+
+  houseId  String
+  house             House   @relation(fields: [houseId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([houseId])  // Index for faster filtering by houseId
 }
