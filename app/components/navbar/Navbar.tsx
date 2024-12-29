@@ -1,3 +1,4 @@
+import Link from "next/link";
 import Container from "../Container";
 import Logo from "./Logo"
 import UserMenu from "./Menu";
@@ -10,7 +11,9 @@ const Navbar = () => {
                 >
                 <Container   >
                     <div className=" flex flex-row items-center justify-between gap-3 md:gap-0">
+                        <Link href="/">
                         <Logo/>
+                        </Link>       
                         <Search />
                         <UserMenu/>
                     </div>

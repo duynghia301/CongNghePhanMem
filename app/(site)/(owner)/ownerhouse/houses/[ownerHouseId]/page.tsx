@@ -3,14 +3,16 @@ import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { DescriptionForm } from "./_components/description-form";
 import { ImageForm } from "./_components/image-form";
 import { AddressForm } from "./_components/adress_form";
-import { CategoryForm } from "./category-form";
 import { LocationForm } from "./_components/location_form";
 import { PhoneForm } from "./_components/PhoneForm";
 import { PriceForm } from "./_components/price_form";
 import { AreaForm } from "./_components/roomArea_form";
+import { NameForm } from "./_components/name_form";
+import { DescriptionForm } from "./_components/description_form";
+import { AttachmnetForm } from "./_components/attachment-form";
+import { CategoryForm } from "./_components/category-form";
 
 const HouseIdPage = async ({ params }: { params: { houseId: string } }) => {
   const { houseId } = params;
@@ -93,7 +95,6 @@ const HouseIdPage = async ({ params }: { params: { houseId: string } }) => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-16">
         <div>
           <AddressForm initialData={house} houseId={house.id} />
-          <DescriptionForm initialData={house} houseId={house.id} />
           <ImageForm initialData={house} houseId={house.id} />
           <CategoryForm 
             initialData={house}
@@ -109,10 +110,13 @@ const HouseIdPage = async ({ params }: { params: { houseId: string } }) => {
             <div className="flex items-center gap-x-2">
               <h2 className="text-xl">Vị trí</h2>
             </div>
-            <AreaForm initialData={house} houseId={house.id}/>
             <LocationForm initialData={house} houseId={house.id} />
+            <AreaForm initialData={house} houseId={house.id}/>
             <PhoneForm initialData={house} houseId={house.id}/>
             <PriceForm  initialData={house} houseId={house.id} />
+            <NameForm  initialData={house} houseId={house.id} />
+            <DescriptionForm initialData={house} houseId={house.id}/>
+            <AttachmnetForm initialData={house} houseId={house.id}/>
             
           </div>
         </div>

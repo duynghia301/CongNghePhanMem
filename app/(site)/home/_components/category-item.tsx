@@ -21,19 +21,18 @@ export const CategoryItem = ({
   const searchParams = useSearchParams();
 
   const currentCategoryId = searchParams?.get("categoryId") || "";
-  const currentTitle = searchParams?.get("title") || "";
 
   const isSelected = currentCategoryId === value;
 
   const onClick = () => {
-    const url = qs.stringifyUrl({
-      url: pathname || "",
-      query: {
-        title: currentTitle,
-        categoryId: isSelected ? undefined : value, // Use undefined instead of null to omit the key
-      },
-    }, { skipNull: true, skipEmptyString: true });
+    const currentParams = new URLSearchParams(searchParams);
+    if (isSelected) {
+      currentParams.delete("categoryId");
+    } else {
+      currentParams.set("categoryId", value || "");
+    }
 
+    const url = `${pathname}?${currentParams.toString()}`;
     router.push(url);
   };
 
@@ -47,9 +46,7 @@ export const CategoryItem = ({
       onClick={onClick}
     >
       {Icon && <Icon size={20} />}
-      <div className="truncate">
-        {label}
-      </div>
+      <div className="truncate">{label}</div>
     </button>
   );
 };

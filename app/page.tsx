@@ -1,23 +1,18 @@
 import React from 'react';
 import { Metadata } from 'next';
-import { UserButton } from '@clerk/nextjs';
-import Navbar from './components/navbar/Navbar';
-
+import Housess from './(site)/home/page'; // Adjust the import path if necessary
 
 export const metadata: Metadata = {
   title: "Trang chủ | Fast Home",
   description: "Đồ Án Group 6",
 };
-export default function Home() {
+
+export default function Home({ searchParams }: { searchParams: Record<string, string> }) {
   return (
     <div>
-      
-      <div className="header ">
-      <Navbar/> 
-        
+      <div className="header">
+        <Housess searchParams={searchParams} /> {/* Pass searchParams as a prop */}
       </div>
-
-  
     </div>
   );
 }

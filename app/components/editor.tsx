@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { EditorState, convertToRaw, ContentState } from "draft-js";
 import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
@@ -16,11 +16,17 @@ const RichTextEditor = ({
   onChange,
   value,
 }: RichTextEditorProps) => {
-  const contentBlock = htmlToDraft(value);
-  const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
-  const editorStateInit = EditorState.createWithContent(contentState);
+  const [editorState, setEditorState] = useState(() => {
+    const contentBlock = htmlToDraft(value || "");
+    const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
+    return EditorState.createWithContent(contentState);
+  });
 
-  const [editorState, setEditorState] = useState(editorStateInit);
+  useEffect(() => {
+    const contentBlock = htmlToDraft(value || "");
+    const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
+    setEditorState(EditorState.createWithContent(contentState));
+  }, [value]);
 
   const handleEditorChange = (state: EditorState) => {
     setEditorState(state);
@@ -37,5 +43,4 @@ const RichTextEditor = ({
   );
 };
 
-// Export component
 export default RichTextEditor;

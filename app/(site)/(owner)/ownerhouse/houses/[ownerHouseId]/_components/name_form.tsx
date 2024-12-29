@@ -25,23 +25,23 @@ import { House } from "@prisma/client";
 
 
 
-interface DescriptionFormProps{
+interface NameFormProps{
     initialData:House
     houseId:string
 };
 
 const formSchema = z.object({
-    description: z.string().min(1,{
-        message:"Description is required",
+    name: z.string().min(1,{
+        message:"Name is required",
     }),
 });
 
 
 
-export const DescriptionForm = ({
+export const NameForm = ({
     initialData,
     houseId
-}:DescriptionFormProps) =>{
+}:NameFormProps) =>{
 
     const [isEditng, setIsEditing]= useState(false);
 
@@ -52,7 +52,7 @@ export const DescriptionForm = ({
     const form = useForm<z.infer<typeof formSchema>>({
         resolver:zodResolver(formSchema),
         defaultValues:{
-            description:initialData?.description||""
+            name:initialData?.name||""
         }
     })
 
@@ -60,7 +60,7 @@ export const DescriptionForm = ({
     const onSubmit =async (values: z.infer<typeof formSchema>)=>{
         try {
             await axios.patch(`/api/houses/${houseId}`,values)
-            toast.success("Cousre updated");
+            toast.success("Updated");
             toggleEdit();
             router.refresh();
 
@@ -73,7 +73,7 @@ export const DescriptionForm = ({
     return(
         <div className="mt-6 border bg-slate-100 rounded-md p-4">
             <div className=" font-medium flex items-center justify-between">
-                Mô tả phòng trọ
+            Tiêu đề bài đăng
 
                 <Button onClick={toggleEdit} variant="ghost">
                     {isEditng ? (
@@ -92,9 +92,9 @@ export const DescriptionForm = ({
             {!isEditng && (
                 <p className={cn(
                     "text-sm mt-2",
-                    !initialData.description && "text-slate-500"
+                    !initialData.name && "text-slate-500"
                 )}>
-                    {initialData.description || "No description"}
+                    {initialData.name || "No description"}
                 </p>
             )}
             {isEditng &&(
@@ -105,7 +105,7 @@ export const DescriptionForm = ({
                     >
                         <FormField
                             control={form.control}
-                            name="description"
+                            name="name"
                             render={({field})=>(
                                 <FormItem>  
                                     <FormControl>
