@@ -41,12 +41,12 @@ export const ImageForm = ({ initialData, houseId }: ImageFormProps) => {
 
     const onSubmit: SubmitHandler<FormSchemaType> = async (values) => {
         try {
-            await axios.patch(`/api/courses/${houseId}`, values);
-            toast.success("Course updated");
+            await axios.patch(`/api/houses/${houseId}`, values);
+            toast.success("Updated");
             toggleEdit();
             router.refresh();
         } catch (error) {
-            console.error("Error updating course:", error);
+            console.error("Error updating house:", error);
             toast.error("Something went wrong");
         }
     };
@@ -54,7 +54,7 @@ export const ImageForm = ({ initialData, houseId }: ImageFormProps) => {
     return (
         <div className="mt-6 border bg-slate-100 rounded-md p-4">
             <div className="font-medium flex items-center justify-between">
-                Ảnh bìa khóa học
+            Ảnh phòng trọ
                 <Button onClick={toggleEdit} variant="ghost">
                     {isEditing ? (
                         <>Hủy</>

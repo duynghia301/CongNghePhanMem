@@ -15,6 +15,10 @@ model House {
   imageURL          String? @db.Text
   phone             String?
 
+  rentalPrice       Float?   // Giá thuê (hàng tháng hoặc theo đơn vị thời gian)
+  depositPrice      Float?
+  roomArea Float?
+
   categoryId  String?
   category    Category?    @relation(fields: [categoryId], references: [id],onDelete: Cascade)
 
@@ -65,7 +69,7 @@ model Facility {
   type              String
   value             String
 
-  house             House   @relation(fields: [houseId], references: [id],onDelete: Cascade)
+  house             House   @relation(fields: [houseId], references: [id])
 
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
@@ -82,7 +86,7 @@ model Comment {
   updatedAt         DateTime @updatedAt
   deleted           Boolean  @default(false) // Soft delete flag
 
-  house             House   @relation(fields: [houseId], references: [id],onDelete: Cascade)
+  house             House   @relation(fields: [houseId], references: [id])
 
   @@index([houseId]) // Index for faster lookups based on houseId
   @@index([userId])  // Index for faster lookups based on userId
@@ -93,7 +97,7 @@ model Attachment {
   url       String   @db.Text
 
   houseId  String
-  house             House   @relation(fields: [houseId], references: [id],onDelete: Cascade)
+  house             House   @relation(fields: [houseId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

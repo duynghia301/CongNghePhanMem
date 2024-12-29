@@ -10,12 +10,12 @@ import toast from "react-hot-toast";
 
 interface ActionsProps{
     disable:boolean;
-    courseId:string
+    houseId:string
     // isPublished:boolean
 }
 export const  Actions  =  ({
     disable,
-    courseId,
+    houseId,
     // isPublished,
 }:ActionsProps)=>{
     const [isLoading , setIsLoading] = useState(false)
@@ -47,12 +47,12 @@ export const  Actions  =  ({
         try {
             setIsLoading(true);
 
-            await axios.delete(`/api/courses/${courseId}`)
+            await axios.delete(`/api/houses/${houseId}`)
 
             
-            toast.success("Course deleted");
+            toast.success("Deleted");
             router.refresh();
-            router.push(`/teacher/courses`)
+            router.push(`/ownerhouse/houses`)
         } catch (error) {
             toast.error("Something when wrong")
         }finally{

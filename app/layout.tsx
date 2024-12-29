@@ -28,7 +28,7 @@ export default function RootLayout({
               defaultTheme="light"
             >
               <ToastProvider/>
-             <Navbar/> 
+            
           {children}
         </ThemeProvider>
         

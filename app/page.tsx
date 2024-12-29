@@ -13,7 +13,7 @@ export default function Home() {
     <div>
       
       <div className="header ">
-
+      <Navbar/> 
         
       </div>
 

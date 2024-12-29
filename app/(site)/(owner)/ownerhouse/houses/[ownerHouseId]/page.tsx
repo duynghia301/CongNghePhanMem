@@ -8,6 +8,9 @@ import { ImageForm } from "./_components/image-form";
 import { AddressForm } from "./_components/adress_form";
 import { CategoryForm } from "./category-form";
 import { LocationForm } from "./_components/location_form";
+import { PhoneForm } from "./_components/PhoneForm";
+import { PriceForm } from "./_components/price_form";
+import { AreaForm } from "./_components/roomArea_form";
 
 const HouseIdPage = async ({ params }: { params: { houseId: string } }) => {
   const { houseId } = params;
@@ -19,22 +22,17 @@ const HouseIdPage = async ({ params }: { params: { houseId: string } }) => {
   }
 
   // Fetch the house by houseId and userId
-  const house = await db.house.findUnique({
-    where: {
-      id: houseId,
-      userId: userId, // Ensures the house belongs to the current user
+ const house = await db.house.findFirst({
+  where: {
+    id: houseId,
+    userId: userId,
+  },
+  include: {
+    attachments: {
+      orderBy: { createdAt: "desc" },
     },
-    include: {
-      attachments: {
-        orderBy: { createdAt: "desc" },
-      },
-      category: true, // Include category details for the house
-      facilities: true, // Include associated facilities
-      comments: {
-        where: { deleted: false }, // Filter out deleted comments if needed
-      },
-    },
-  });
+  },
+});
 
   if (!house) {
     redirect("/"); // Redirect if no house found
@@ -111,7 +109,11 @@ const HouseIdPage = async ({ params }: { params: { houseId: string } }) => {
             <div className="flex items-center gap-x-2">
               <h2 className="text-xl">Vị trí</h2>
             </div>
+            <AreaForm initialData={house} houseId={house.id}/>
             <LocationForm initialData={house} houseId={house.id} />
+            <PhoneForm initialData={house} houseId={house.id}/>
+            <PriceForm  initialData={house} houseId={house.id} />
+            
           </div>
         </div>
       </div>

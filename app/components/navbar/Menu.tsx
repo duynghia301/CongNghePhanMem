@@ -23,7 +23,7 @@ const UserMenu = () => {
                 >
                    
                     <Link href="/ownerhouse/create">
-                    Airbdn your home
+                    Đăng tin
                     </Link>
                 </div>
                 <div

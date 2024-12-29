@@ -76,3 +76,42 @@ export async function DELETE(req: Request, { params }: { params: { houseId: stri
       return new NextResponse("Internal Error", { status: 500 });
     }
 }
+export async function PATCH(req: Request, { params }: { params: { houseId: string } }) {
+  try {
+    if (!params.houseId) {
+      return new NextResponse("House ID is required", { status: 400 });
+    }
+
+    const { userId } = await auth();
+    const { houseId } = params; // Lấy houseId từ params
+
+    if (!userId) {
+      return new NextResponse("Unauthorized", { status: 401 });
+    }
+
+    const house = await db.house.findUnique({
+      where: { id: houseId },
+    });
+
+    if (!house) {
+      return new NextResponse("House not found", { status: 404 });
+    }
+
+    if (house.userId !== userId) {
+      return new NextResponse("Unauthorized", { status: 401 });
+    }
+
+    const data = await req.json(); // Lấy dữ liệu từ request body
+
+    // Cập nhật dữ liệu của ngôi nhà
+    const updatedHouse = await db.house.update({
+      where: { id: houseId },
+      data, // Áp dụng dữ liệu mới
+    });
+
+    return NextResponse.json(updatedHouse);
+  } catch (error) {
+    console.error("[HOUSE PATCH ERROR]", error);
+    return new NextResponse("Internal Error", { status: 500 });
+  }
+}
