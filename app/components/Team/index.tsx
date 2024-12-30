@@ -15,10 +15,28 @@ const teamData: TeamType[] = [
   },
   {
     id: 2,
-    name: "Hoàng Sơn",
-    designation: "215052129",
+    name: "Du Long",
+    designation: "215052223",
     image: "/images/team/team-02.png",
-    facebookLink: "https://www.facebook.com/nguyenhoangson.heh",
+    facebookLink: "https://www.facebook.com/long.du.338658",
+    twitterLink: "/#",
+    instagramLink: "/#",
+  },
+  {
+    id: 3,
+    name: "Hữu Vinh",
+    designation: "215052155",
+    image: "/images/team/team-03.png",
+    facebookLink: "https://www.facebook.com/huuvinh.ngo.79",
+    twitterLink: "/#",
+    instagramLink: "/#",
+  },
+  {
+    id: 4,
+    name: "Minh Quân",
+    designation: "215052277",
+    image: "/images/team/team-03.png",
+    facebookLink: "https://www.facebook.com/profile.php?id=100034751507589",
     twitterLink: "/#",
     instagramLink: "/#",
   },
@@ -33,9 +51,9 @@ const Team = () => {
       <div className="container">
         <div className="mb-[60px]">
           <SectionTitle
-            subtitle="Đồ án"
-            title="Nhóm 12 - Lớp 21D1TH-PM02"
-            paragraph="Chúng tôi là 2 cá nhân vô tình va vào nhau rồi làm đồ án"
+            subtitle="Đồ án công nghệ phần mềm"
+            title="Nhóm 6 - Lớp 21D1TH-PM02"
+            paragraph="Chúng tôi với kinh nghiệm đầy mình, tâm huyết, uy tín là trên hết"
             width="640px"
             center
           />

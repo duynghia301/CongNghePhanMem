@@ -4,6 +4,7 @@ import { ThemeProvider } from "next-themes";
 import { ClerkProvider } from "@clerk/nextjs";
 import Navbar from "./components/navbar/Navbar";
 import { ToastProvider } from "@/components/providers/toaster-provider";
+import Footer from "@/components/Footer";
 
 
 export const metadata: Metadata = {
@@ -30,6 +31,8 @@ export default function RootLayout({
               <ToastProvider/>
              <Navbar/> 
           {children}
+          
+          <Footer/>
         </ThemeProvider>
         
         </body>

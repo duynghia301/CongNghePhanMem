@@ -11,7 +11,8 @@ export default function Home({ searchParams }: { searchParams: Record<string, st
   return (
     <div>
       <div className="header">
-        <Housess searchParams={searchParams} /> {/* Pass searchParams as a prop */}
+        <Housess searchParams={searchParams} />
+   
       </div>
     </div>
   );

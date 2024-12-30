@@ -18,13 +18,13 @@ const About = () => {
           <div className="-mx-4 flex flex-wrap items-center">
             <div className="w-full px-4 lg:w-1/2">
               <div className="mb-12 max-w-[540px] lg:mb-0">
-                <h2 className="mb-5 text-3xl font-bold leading-tight text-dark dark:text-white sm:text-[40px] sm:leading-[1.2]">
+                <h2 className="pl-[50px] mb-5 text-3xl font-bold leading-tight text-dark dark:text-white sm:text-[40px] sm:leading-[1.2]">
                  Đại học kinh tế tài chính HCM
                 </h2>
-                <p className="mb-10 text-base leading-relaxed text-body-color dark:text-dark-6">
+                <p className="mb-10 text-base leading-relaxed text-body-color dark:text-dark-6 pl-[50px]">
                   Công nghệ thông tin - chuyên ngành công nghệ phần mềm
                   <br /> <br />
-                  Chúng tôi Group 12 luôn muốn sáng tạo và thách thức bản thân mình sau khoảng thời gian tích lũy kiến thức UEF, hiện nay chúng tôi đang phát triển 1 website cho phép người dùng dễ dàng học tập từ những chuyên gia, giảng viên,.... chúng tôi muốn phát triển nó hoạt động và có thể đưa vào hoạt động trong môi trường giáo dục!
+                  Chúng tôi Group 6 luôn muốn sáng tạo và thách thức bản thân mình sau khoảng thời gian tích lũy kiến thức UEF, hiện nay chúng tôi đang phát triển 1 website cho phép người dùng dễ dàng tìm kiếm phòng trọ, nhà ở trên lãnh thổ Việt Nam hình chữ S tươi đẹp!
                 </p>
 
                 {/* <a

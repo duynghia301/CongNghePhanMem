@@ -32,7 +32,7 @@ export const HouseCard = ({
 
   return (
     <div className="shadow-sm hover:shadow-md">
-      <Link href={`/house/${id}`}>
+      <Link href={`/housePublished/${id}`}>
         <div className="group hover:shadow-sm transition overflow-hidden border rounded-lg p-3 h-full">
           <div className="relative w-full aspect-video rounded-md overflow-hidden">
             <Image

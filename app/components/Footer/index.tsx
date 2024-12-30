@@ -4,7 +4,7 @@ import Link from "next/link";
 const Footer = () => {
   return (
     <footer
-      className="wow fadeInUp relative z-10  pt-20 lg:pt-[100px]"
+      className="wow fadeInUp relative z-10  pt-20 lg:pt-[50px]"
       data-wow-delay=".15s"
     >
       <div className="container">
@@ -133,9 +133,9 @@ const Footer = () => {
               </div>
             </div>
             <div className="w-full px-4 md:w-1/3 lg:w-1/2">
-              <div className="my-1 flex justify-center md:justify-end">
-                <p className="text-base text-gray-7">
-                  Designed and Developed by{" NISO"}
+              <div className=" flex justify-center">
+                <p className="text-base text-gray-7 mr-[50px]">
+                  Designed and Developed by Group 6 UEF"
                   
                 </p>
               </div>
