@@ -9,7 +9,7 @@ datasource db {
 model House {
   id                String   @id @default(uuid()) 
   userId String
-  name              String?  @db.Text
+  name              String  @db.Text
   address           String?  @db.Text
   description       String? @db.Text
   imageURL          String? @db.Text
@@ -29,7 +29,6 @@ model House {
   rating            Int    @default(5) 
   allowedVehicles   String?
 
-  facilities        Facility[]
   attachments Attachment[]
   comments          Comment[]
 
@@ -39,8 +38,8 @@ model House {
   updatedAt         DateTime @updatedAt
 
   @@index([categoryId])
-  @@index([status])
   @@fulltext([name])
+  @@unique([userId,id])
 
 }
 
@@ -62,20 +61,7 @@ enum UserRole {
   STUDENT 
 }
 
-model Facility {
-  id                String   @id @default(uuid()) 
-  houseId           String  
-  name              String
-  type              String
-  value             String
 
-  house             House   @relation(fields: [houseId], references: [id])
-
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
-
-  @@index([houseId])  // Index for faster filtering by houseId
-}
 
 model Comment {
   id                String   @id @default(uuid()) 
@@ -97,7 +83,7 @@ model Attachment {
   url       String   @db.Text
 
   houseId  String
-  house             House   @relation(fields: [houseId], references: [id])
+  house             House   @relation(fields: [houseId], references: [id],onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
             data: {
               userId: userId,
               name,
-              status: 'PENDING',
+              status: 'REJECTED',
             }
         });
 

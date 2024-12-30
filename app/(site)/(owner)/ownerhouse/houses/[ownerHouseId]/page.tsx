@@ -1,8 +1,7 @@
 import { db } from "@/lib/db";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
-import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
+
 import { ImageForm } from "./_components/image-form";
 import { AddressForm } from "./_components/adress_form";
 import { LocationForm } from "./_components/location_form";
@@ -13,31 +12,39 @@ import { NameForm } from "./_components/name_form";
 import { DescriptionForm } from "./_components/description_form";
 import { AttachmnetForm } from "./_components/attachment-form";
 import { CategoryForm } from "./_components/category-form";
+import { Actions } from "./_components/actions";
 
-const HouseIdPage = async ({ params }: { params: { houseId: string } }) => {
-  const { houseId } = params;
-  
-  // Authenticate user
-  const { userId } = await auth();
-  if (!userId) {
-    redirect("/"); // Redirect if user is not authenticated
+const HouseIdPage = async ({ params }: { params: { ownerHouseId: string } }) => {
+  const { ownerHouseId } = params; // Ensure this is destructured properly
+  if (!ownerHouseId) {
+    console.error("Invalid houseId in URL params", params);
+    redirect("/"); // Redirect if no houseId provided
+    return;
   }
 
-  // Fetch the house by houseId and userId
- const house = await db.house.findFirst({
-  where: {
-    id: houseId,
-    userId: userId,
-  },
-  include: {
-    attachments: {
-      orderBy: { createdAt: "desc" },
+  const { userId } = await auth();
+  const isAuth = !!userId;
+
+  if (!isAuth) {
+    return redirect("/"); // Redirect if user is not authenticated
+  }
+
+  const house = await db.house.findUnique({
+    where: {
+      id: ownerHouseId, // Ensure houseId is passed properly here
+      userId, // Ensure the userId is included as a filter
     },
-  },
-});
+    include: {
+      attachments: {
+        orderBy: { createdAt: "desc" },
+      },
+    },
+  });
 
   if (!house) {
+    console.error("Invalid houseId or userId", { userId });
     redirect("/"); // Redirect if no house found
+    return;
   }
 
   // Fetch categories for the form dropdown
@@ -50,7 +57,6 @@ const HouseIdPage = async ({ params }: { params: { houseId: string } }) => {
     house.address,
     house.description || "",
     house.imageURL,
-    house.latitude,
     house.categoryId,
   ];
   const totalFields = requiredFields.length;
@@ -64,8 +70,6 @@ const HouseIdPage = async ({ params }: { params: { houseId: string } }) => {
     { value: "APPROVED", label: "Công khai" },
     { value: "REJECTED", label: "Riêng tư" },
   ];
-  const currentStatus =
-    statusOptions.find((opt) => opt.value === house.status)?.label || "Không xác định";
 
   return (
     <div className="p-6">
@@ -77,18 +81,7 @@ const HouseIdPage = async ({ params }: { params: { houseId: string } }) => {
           </span>
         </div>
         <div className="flex items-center gap-x-4">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button>{currentStatus}</Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              {statusOptions.map((option) => (
-                <DropdownMenuItem key={option.value}>
-                  {option.label}
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <Actions disable={!isComplete} houseId={house.id} />
         </div>
       </div>
 
@@ -96,7 +89,7 @@ const HouseIdPage = async ({ params }: { params: { houseId: string } }) => {
         <div>
           <AddressForm initialData={house} houseId={house.id} />
           <ImageForm initialData={house} houseId={house.id} />
-          <CategoryForm 
+          <CategoryForm
             initialData={house}
             houseId={house.id}
             options={categories.map((category) => ({
@@ -111,13 +104,12 @@ const HouseIdPage = async ({ params }: { params: { houseId: string } }) => {
               <h2 className="text-xl">Vị trí</h2>
             </div>
             <LocationForm initialData={house} houseId={house.id} />
-            <AreaForm initialData={house} houseId={house.id}/>
-            <PhoneForm initialData={house} houseId={house.id}/>
-            <PriceForm  initialData={house} houseId={house.id} />
-            <NameForm  initialData={house} houseId={house.id} />
-            <DescriptionForm initialData={house} houseId={house.id}/>
-            <AttachmnetForm initialData={house} houseId={house.id}/>
-            
+            <AreaForm initialData={house} houseId={house.id} />
+            <PhoneForm initialData={house} houseId={house.id} />
+            <PriceForm initialData={house} houseId={house.id} />
+            <NameForm initialData={house} houseId={house.id} />
+            <DescriptionForm initialData={house} houseId={house.id} />
+            <AttachmnetForm initialData={house} houseId={house.id} />
           </div>
         </div>
       </div>

@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { ConfirmModal } from "@/app/components/models/confirm-modal";
 import { Button } from "@/components/ui/button";
@@ -8,73 +8,63 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
 
-interface ActionsProps{
-    disable:boolean;
-    houseId:string
-    // isPublished:boolean
+interface ActionsProps {
+  disable: boolean;
+  houseId: string;
 }
-export const  Actions  =  ({
-    disable,
-    houseId,
-    // isPublished,
-}:ActionsProps)=>{
-    const [isLoading , setIsLoading] = useState(false)
-    const router = useRouter()
 
-    const onClick = async () =>{
-        try {
-            setIsLoading(true);
+export const Actions = ({ disable, houseId }: ActionsProps) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
-            // if (isPublished) {
-            //     await axios.patch(`/api/courses/${courseId}/unpublish`)
-            //     toast.success("Course unpublished");
-            // }else{
-            //     await axios.patch(`/api/courses/${courseId}/publish`)
-            //     toast.success("Course published");
-            // }
-           
-            router.refresh();
+  const onClick = async () => {
+    try {
+      setIsLoading(true);
 
-        } catch (error) {
-            toast.error("Something when wrong")
-        }finally{
-            setIsLoading(false)
-        }
+      // Ensure houseId is used correctly in the API request URL
+      await axios.patch(`/api/houses/${houseId}`, { status: "PENDING" });
+      toast.success("Status set to Pending");
+
+      router.refresh();
+    } catch (error) {
+      toast.error("Something went wrong");
+    } finally {
+      setIsLoading(false);
     }
+  };
 
+  const onDelete = async () => {
+    try {
+      setIsLoading(true);
 
-    const onDelete = async()=>{
-        try {
-            setIsLoading(true);
+      // Ensure houseId is used correctly in the API request URL
+      await axios.delete(`/api/houses/${houseId}`);
 
-            await axios.delete(`/api/houses/${houseId}`)
-
-            
-            toast.success("Deleted");
-            router.refresh();
-            router.push(`/ownerhouse/houses`)
-        } catch (error) {
-            toast.error("Something when wrong")
-        }finally{
-            setIsLoading(false)
-        }
+      toast.success("Deleted");
+      router.refresh();
+      router.push(`/ownerhouse/houses`);
+    } catch (error) {
+      toast.error("Something went wrong");
+    } finally {
+      setIsLoading(false);
     }
+  };
 
-    return(
-        <div className="flex items-center gap-x-2">
-             <Button
-                onClick={onClick}
-                disabled={disable || isLoading}
-                variant="outline"
-                size="sm"
-            >
-                {/* {isPublished ? "Unpublish" : "Publish"} */}
-            </Button>
-            <ConfirmModal onConfirm={onDelete}>
-                <Button size="sm" disabled={isLoading}>
-                    <Trash className="h-4 w-4"/>
-                </Button>
-            </ConfirmModal>
-        </div>
-    )
-}
+  return (
+    <div className="flex items-center gap-x-2">
+      <Button
+        onClick={onClick}
+        disabled={disable || isLoading}
+        variant="outline"
+        size="sm"
+      >
+        Hoàn Tất
+      </Button>
+      <ConfirmModal onConfirm={onDelete}>
+        <Button size="sm" disabled={isLoading}>
+          <Trash className="h-4 w-4" />
+        </Button>
+      </ConfirmModal>
+    </div>
+  );
+};

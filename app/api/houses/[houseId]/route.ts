@@ -1,117 +1,71 @@
 // app/api/houses/[houseId]/route.ts
 import { db } from "@/lib/db";
 import { auth } from "@clerk/nextjs/server";
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server"; 
 
-export async function PUT(req: Request, { params }: { params: { houseId: string } }) {
-  try {
-    if (!params.houseId) {
-        return new NextResponse("House ID is required", { status: 400 });
-    }
 
-    const { userId } = await auth();
-    const { houseId } = params;  // Get houseId from params
-
-    if (!userId) {
-      return new NextResponse("Unauthorized", { status: 401 });
-    }
-
-    const house = await db.house.findUnique({
-      where: { id: houseId },  // Ensure houseId is passed correctly
-    });
-
-    if (!house) {
-      return new NextResponse("House not found", { status: 404 });
-    }
-
-    if (house.userId !== userId) {
-      return new NextResponse("Unauthorized", { status: 401 });
-    }
-
-    const data = await req.json();
-
-    const updatedHouse = await db.house.update({
-      where: { id: params.houseId },
-      data,
-    });
-
-    return NextResponse.json(updatedHouse);
-  } catch (error) {
-    console.error("[HOUSE PUT ERROR]", error);
-    return new NextResponse("Internal Error", { status: 500 });
-  }
-}
-
-export async function DELETE(req: Request, { params }: { params: { houseId: string } }) {
+export async function DELETE(
+  req: Request,
+  { params }: { params: { houseId: string } }
+){
     try {
-      if (!params.houseId) {
-          return new NextResponse("House ID is required", { status: 400 });
-      }
 
       const { userId } = await auth();
-  
       if (!userId) {
         return new NextResponse("Unauthorized", { status: 401 });
       }
-  
-      const house = await db.house.findUnique({
-        where: { id: params.houseId },
+
+      const houseOwner = await db.house.findUnique({
+        where: { 
+          id: params.houseId,
+          userId,
+         },
       });
-  
-      if (!house) {
-        return new NextResponse("House not found", { status: 404 });
-      }
-  
-      if (house.userId !== userId) {
+      if (!houseOwner) {
         return new NextResponse("Unauthorized", { status: 401 });
       }
-  
-      await db.house.delete({
-        where: { id: params.houseId },
+      
+      const deleteHome = await db.house.delete({
+        where: { 
+          id: params.houseId,
+         
+        },
       });
-  
-      return new NextResponse(null, { status: 204 });
+      return NextResponse.json(deleteHome);
+
     } catch (error) {
-      console.error("[HOUSE DELETE ERROR]", error);
       return new NextResponse("Internal Error", { status: 500 });
     }
 }
-export async function PATCH(req: Request, { params }: { params: { houseId: string } }) {
+export async function PATCH(
+  req: NextRequest, 
+  { params }: { params: { houseId: string } }
+) {
   try {
-    if (!params.houseId) {
-      return new NextResponse("House ID is required", { status: 400 });
-    }
-
-    const { userId } = await auth();
-    const { houseId } = params; // Lấy houseId từ params
+    const { houseId } = params;
+    const authResult = await auth(); 
+    const userId = authResult.userId; 
 
     if (!userId) {
-      return new NextResponse("Unauthorized", { status: 401 });
+      return NextResponse.redirect('/'); 
     }
 
-    const house = await db.house.findUnique({
-      where: { id: houseId },
+    const values = await req.json();
+    console.log("PATCH request received with values:", values);
+    
+    const course = await db.house.update({
+      where: {
+        id: houseId,
+        userId: userId,
+      },
+      data: {
+        ...values,
+      },
     });
 
-    if (!house) {
-      return new NextResponse("House not found", { status: 404 });
-    }
-
-    if (house.userId !== userId) {
-      return new NextResponse("Unauthorized", { status: 401 });
-    }
-
-    const data = await req.json(); // Lấy dữ liệu từ request body
-
-    // Cập nhật dữ liệu của ngôi nhà
-    const updatedHouse = await db.house.update({
-      where: { id: houseId },
-      data, // Áp dụng dữ liệu mới
-    });
-
-    return NextResponse.json(updatedHouse);
+    return NextResponse.json(course);
   } catch (error) {
-    console.error("[HOUSE PATCH ERROR]", error);
+    console.log("[HOME_ID]", error);
     return new NextResponse("Internal Error", { status: 500 });
   }
 }

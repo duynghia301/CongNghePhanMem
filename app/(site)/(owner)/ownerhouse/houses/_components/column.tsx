@@ -48,7 +48,7 @@ export const columns: ColumnDef<House>[] = [
     },
   },
   {
-    accessorKey: "isPublished",
+    accessorKey: "status",
     header: ({ column }) => {
       return (
         <Button
@@ -61,20 +61,37 @@ export const columns: ColumnDef<House>[] = [
       );
     },
     cell: ({ row }) => {
-      const isPublished = row.getValue("isPublished") || false;
+      // Explicitly define the type of status
+      const status = row.getValue("status") as keyof typeof statusMap;
+  
+      // Map status to display-friendly labels and badge styles
+      const statusMap = {
+        PENDING: { label: "Chờ duyệt", className: "bg-yellow-500" },
+        APPROVED: { label: "Công khai", className: "bg-green-500" },
+        REJECTED: { label: "Riêng tư", className: "bg-red-500" },
+      };
+  
+      const statusInfo = statusMap[status] || {
+        label: "Không xác định",
+        className: "bg-gray-500",
+      };
+  
       return (
-        <Badge
-          className={cn("bg-slate-500", isPublished && "bg-sky-600")}
-        >
-          {isPublished ? "Đã đăng" : "Nháp"}
+        <Badge className={cn(statusInfo.className)}>
+          {statusInfo.label}
         </Badge>
       );
     },
   },
+  
   {
     id: "action",
     cell: ({ row }) => {
       const { id } = row.original;
+      if (!id) {
+        console.error("House ID is missing!");
+        return null;
+      }
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
