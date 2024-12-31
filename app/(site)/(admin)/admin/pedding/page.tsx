@@ -1,9 +1,30 @@
-const ManagePeddings = () => {
+import { db } from "@/lib/db";
+import { auth } from "@clerk/nextjs/server";
+import { redirect } from "next/navigation";
+import { DataTable } from "../_components/data-table";
+import { columns } from "../_components/column";
+
+
+const ManagePeddings =async () => {
+   
+    const houses = await db.house.findMany({
+        where:{
+            status:"PENDING"
+        },
+        orderBy:{
+            createdAt:"desc"
+        }
+    })
     return ( 
-        <div>
-            Pedding
+
+        <div className="p-2">
+        <div className="container mx-auto py-10">
+            <DataTable columns={columns} data={houses} /> 
         </div>
-     );
+
+    </div>
+
+    );
 }
  
 export default ManagePeddings;

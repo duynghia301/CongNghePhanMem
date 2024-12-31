@@ -4,7 +4,6 @@ import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { DataTable } from "./_components/data-table";
 import { columns } from "./_components/column";
-import Navbar from "@/app/components/navbar/Navbar";
 
 const HousePage = async () => {
     const {userId } = await auth();

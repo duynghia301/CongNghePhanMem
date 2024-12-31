@@ -2,17 +2,17 @@
 import { db } from "@/lib/db";
 import { redirect } from "next/navigation";
 import Image from "next/image";
+import HouseDetails from "./_components/_components/HouseDetails";
+import CopyPhoneNumber from "./_components/_components/CoppyPhone";
+import HouseDescription from "./_components/_components/HouseDescription";
+import HouseAttachments from "./_components/_components/HouseAttachments";
 
-import CopyPhoneNumber from "./_components/CoppyPhone";
-import HouseDetails from "./_components/HouseDetails";
-import HouseDescription from "./_components/HouseDescription";
-import HouseAttachments from "./_components/HouseAttachments";
 
-const HouseDetailPage = async ({ params }: { params: { housepublisedId: string } }) => {
+const HouseDetailPeddingPage = async ({ params }: { params: { adminId: string } }) => {
+    const {adminId}= await params
   const house = await db.house.findUnique({
     where: {
-      id: params.housepublisedId,
-      status: "APPROVED", // Only approved houses
+      id: adminId,
     },
     include: {
       category: true, // Include category relation
@@ -31,7 +31,6 @@ const HouseDetailPage = async ({ params }: { params: { housepublisedId: string }
 
   return (
     <div className="container mx-auto p-6 pt-[100px] pl-[100px] space-y-8 border"> 
-      
       {/* Image Section */}
       <div>
         <Image
@@ -66,4 +65,4 @@ const HouseDetailPage = async ({ params }: { params: { housepublisedId: string }
   );
 };
 
-export default HouseDetailPage;
+export default HouseDetailPeddingPage;

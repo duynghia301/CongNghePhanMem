@@ -56,7 +56,7 @@ export async function PATCH(
     const course = await db.house.update({
       where: {
         id: houseId,
-        userId: userId,
+       
       },
       data: {
         ...values,
