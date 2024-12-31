@@ -1,36 +1,43 @@
 "use client";
 import { AiOutlineMenu } from "react-icons/ai";
 import { useCallback, useState } from "react";
-import { SignInButton, SignUpButton, useUser, UserButton } from '@clerk/nextjs';
+import { SignInButton, SignUpButton, useUser, UserButton, useAuth } from '@clerk/nextjs';
 import Avatar from "../Avatar";
 import MenuItem from "./MenuItem";
 import Link from "next/link";
+import { useRouter } from "next/navigation"; // Import useRouter
+import { Admin } from "@/lib/admin";
 
 const UserMenu = () => {
     const [isOpen, setIsOpen] = useState(false);
-    const { user } = useUser();  // Sử dụng hook useUser từ Clerk
+    const { user } = useUser(); 
+    const { userId } = useAuth();
+    const isAdmin = Admin(userId);  // Check if the user is an admin
+    const router = useRouter(); // Instantiate useRouter
 
     const toggleOpen = useCallback(() => {
         setIsOpen((value) => !value);
     }, []);
 
+    const handleManagementClick = () => {
+        router.push("/admin"); // Navigate to the /admin page when clicked
+    };
+
     return (
         <div className="relative">
-            <div className="flex flex-row items-center gap-3 ">
+            <div className="flex flex-row items-center gap-3">
                 <div
                     className="bg-gray-100 hidden md:block text-sm font-semibold py-3 px-4 rounded-full hover:bg-rose-100 transition cursor-pointer shadow-sm hover:shadow-md"
                 >
-                   
                     <Link href="/ownerhouse/create" className="text-red-600">
-                     Đăng tin
+                        Đăng tin
                     </Link>
                 </div>
                 <div
                     className="hidden md:block text-sm font-semibold py-3 px-4 rounded-full hover:bg-neutral-100 transition cursor-pointer shadow-sm hover:shadow-md"
                 >
-                   
                     <Link href="/ownerhouse/houses">
-                     Quản lý tin
+                        Quản lý tin
                     </Link>
                 </div>
                 <div
@@ -39,7 +46,7 @@ const UserMenu = () => {
                 >
                     <AiOutlineMenu />
                     <div className="hidden md:block">
-                        {user ? <UserButton /> : <Avatar />} 
+                        {user ? <UserButton /> : <Avatar />}
                     </div>
                 </div>
             </div>
@@ -66,14 +73,16 @@ const UserMenu = () => {
                         )}
                         {user && (
                             <>
+                                {isAdmin && (
+                                    <MenuItem
+                                        onClick={handleManagementClick} // Navigate to /admin when clicked
+                                        label="Management"
+                                        className="hover:bg-gray-100 transition py-2 px-4"
+                                    />
+                                )}
                                 <MenuItem
                                     onClick={() => {}}
-                                    label="Profile"
-                                    className="hover:bg-gray-100 transition py-2 px-4"
-                                />
-                                <MenuItem
-                                    onClick={() => {}}
-                                    label="Logout"
+                                    label="Yêu Thích"
                                     className="hover:bg-gray-100 transition py-2 px-4"
                                 />
                             </>
@@ -83,6 +92,6 @@ const UserMenu = () => {
             )}
         </div>
     );
-}
+};
 
 export default UserMenu;

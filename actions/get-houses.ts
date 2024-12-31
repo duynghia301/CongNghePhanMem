@@ -1,12 +1,11 @@
 import { db } from "@/lib/db";
 
 interface GetHousesParams {
-  userId: string;
   name?: string;
   categoryId?: string;
 }
 
-export const getHouses = async ({ userId, name, categoryId }: GetHousesParams) => {
+export const getHouses = async ({ name, categoryId }: GetHousesParams) => {
   try {
     const houses = await db.house.findMany({
       where: {

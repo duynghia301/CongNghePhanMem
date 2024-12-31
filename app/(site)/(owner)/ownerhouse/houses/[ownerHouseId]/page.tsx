@@ -81,13 +81,27 @@ const HouseIdPage = async ({ params }: { params: { ownerHouseId: string } }) => 
           </span>
         </div>
         <div className="flex items-center gap-x-4">
-          <Actions disable={!isComplete} houseId={house.id} />
-        </div>
+        <Actions 
+            disable={!isComplete } 
+            houseId={house.id} 
+            currentStatus={house.status} 
+          />        
+          </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-16">
         <div>
-          <AddressForm initialData={house} houseId={house.id} />
+        <NameForm initialData={house} houseId={house.id} />
+        <DescriptionForm initialData={house} houseId={house.id} />
+        <PhoneForm initialData={house} houseId={house.id} />
+        <PriceForm initialData={house} houseId={house.id} />
+         
+        </div>
+        <div className="space-y-6">
+          <div>
+            <div className="flex items-center gap-x-2">
+            </div>
+            <AddressForm initialData={house} houseId={house.id} />
           <ImageForm initialData={house} houseId={house.id} />
           <CategoryForm
             initialData={house}
@@ -97,18 +111,9 @@ const HouseIdPage = async ({ params }: { params: { ownerHouseId: string } }) => 
               value: category.id,
             }))}
           />
-        </div>
-        <div className="space-y-6">
-          <div>
-            <div className="flex items-center gap-x-2">
-              <h2 className="text-xl">Vị trí</h2>
-            </div>
-            <LocationForm initialData={house} houseId={house.id} />
             <AreaForm initialData={house} houseId={house.id} />
-            <PhoneForm initialData={house} houseId={house.id} />
-            <PriceForm initialData={house} houseId={house.id} />
-            <NameForm initialData={house} houseId={house.id} />
-            <DescriptionForm initialData={house} houseId={house.id} />
+           
+           
             <AttachmnetForm initialData={house} houseId={house.id} />
           </div>
         </div>

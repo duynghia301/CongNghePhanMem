@@ -14,7 +14,7 @@ const Navbar = () => {
                         <Link href="/">
                         <Logo/>
                         </Link>       
-                        <Search />
+                        <Search/>
                         <UserMenu/>
                     </div>
                 </Container>

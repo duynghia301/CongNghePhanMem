@@ -42,7 +42,7 @@ const CreatePage = () => {
         try {
             const houseData = {
                 ...values,
-                name: values.title || "Default House Name" // Set a default name if not provided
+                name: values.title || "Phòng trọ không tên" // Set a default name if not provided
             };
             const response = await axios.post("/api/houses", houseData);
             if (response.data.id) {

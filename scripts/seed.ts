@@ -6,6 +6,11 @@ async function main() {
         await database.category.createMany({
             data: [
                 { name: 'Nội thất cho thuê' },
+                { name: 'Nội thất trống'},
+                { name: 'Nội thất thường'},
+                { name: 'Nội thất cao cấp'}
+
+
          
             ],
         });

@@ -31,11 +31,11 @@ model House {
 
   attachments Attachment[]
   comments          Comment[]
-
   status            HouseStatus @default(PENDING)  // Use Enum for better status management
 
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
+
 
   @@index([categoryId])
   @@fulltext([name])
@@ -55,6 +55,8 @@ model Category {
   house House[]
 }
 
+
+
 enum UserRole {
   ADMIN  
   OWNER   
@@ -70,12 +72,12 @@ model Comment {
   content           String
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
-  deleted           Boolean  @default(false) // Soft delete flag
+  deleted           Boolean  @default(false)
 
   house             House   @relation(fields: [houseId], references: [id])
 
-  @@index([houseId]) // Index for faster lookups based on houseId
-  @@index([userId])  // Index for faster lookups based on userId
+  @@index([houseId])
+  @@index([userId])  
 }
 model Attachment {
   id        String   @id @default(uuid())
@@ -88,5 +90,5 @@ model Attachment {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@index([houseId])  // Index for faster filtering by houseId
+  @@index([houseId])  
 }

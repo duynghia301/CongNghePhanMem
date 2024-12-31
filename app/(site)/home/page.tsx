@@ -1,10 +1,10 @@
 import { db } from "@/lib/db";
 import { Categories } from "./_components/categories";
-import { auth } from "@clerk/nextjs/server";
-import { redirect } from "next/navigation";
+
 import { getHouses } from "@/actions/get-houses";
 import { HousesList } from "@/components/houses-list";
 import { SearchInput } from "@/app/components/searchI-input";
+import Navbar from "@/app/components/navbar/Navbar";
 
 interface SearchParamsProps {
   searchParams: {
@@ -13,11 +13,7 @@ interface SearchParamsProps {
   };
 }
 
-const Housess = async ({ searchParams }: SearchParamsProps) => {
-  const { userId } = await auth();
-  if (!userId) {
-    return redirect("/");
-  }
+const Housess = async ({ searchParams }: SearchParamsProps) => {  
   const searchParam = await searchParams
   const categories = await db.category.findMany({
     orderBy: {
@@ -26,7 +22,6 @@ const Housess = async ({ searchParams }: SearchParamsProps) => {
   });
 
   const houses = await getHouses({
-    userId,
     ...searchParam,
   });
 
