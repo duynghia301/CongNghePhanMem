@@ -15,11 +15,11 @@ import { CategoryForm } from "./_components/category-form";
 import { Actions } from "./_components/actions";
 
 const HouseIdPage = async ({ params }: { params: { ownerHouseId: string } }) => {
-  const { ownerHouseId } = params; // Ensure this is destructured properly
+  const { ownerHouseId } = params;
   if (!ownerHouseId) {
     console.error("Invalid houseId in URL params", params);
-    redirect("/"); // Redirect if no houseId provided
-    return;
+    redirect("/"); 
+    
   }
 
   const { userId } = await auth();
@@ -31,20 +31,20 @@ const HouseIdPage = async ({ params }: { params: { ownerHouseId: string } }) => 
 
   const house = await db.house.findUnique({
     where: {
-      id: ownerHouseId, // Ensure houseId is passed properly here
-      userId, // Ensure the userId is included as a filter
+      id: ownerHouseId,
+      userId,
     },
     include: {
       attachments: {
         orderBy: { createdAt: "desc" },
       },
+      images: true,  // Include images
     },
   });
 
   if (!house) {
     console.error("Invalid houseId or userId", { userId });
     redirect("/"); // Redirect if no house found
-    return;
   }
 
   // Fetch categories for the form dropdown
@@ -64,13 +64,6 @@ const HouseIdPage = async ({ params }: { params: { ownerHouseId: string } }) => 
   const completionText = `(${completedFields} / ${totalFields})`;
   const isComplete = requiredFields.every(Boolean);
 
-  // Define status options for dropdown
-  const statusOptions = [
-    { value: "PENDING", label: "Chờ duyệt" },
-    { value: "APPROVED", label: "Công khai" },
-    { value: "REJECTED", label: "Riêng tư" },
-  ];
-
   return (
     <div className="p-6">
       <div className="flex items-center justify-between">
@@ -81,29 +74,28 @@ const HouseIdPage = async ({ params }: { params: { ownerHouseId: string } }) => 
           </span>
         </div>
         <div className="flex items-center gap-x-4">
-        <Actions 
+          <Actions 
             disable={!isComplete } 
             houseId={house.id} 
             currentStatus={house.status} 
           />        
-          </div>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-16">
         <div>
-        <NameForm initialData={house} houseId={house.id} />
-        <DescriptionForm initialData={house} houseId={house.id} />
-        <PhoneForm initialData={house} houseId={house.id} />
-        <PriceForm initialData={house} houseId={house.id} />
-         
+          <NameForm initialData={house} houseId={house.id} />
+          <DescriptionForm initialData={house} houseId={house.id} />
+          <PhoneForm initialData={house} houseId={house.id} />
+          <PriceForm initialData={house} houseId={house.id} />
         </div>
         <div className="space-y-6">
-          <div>
-            <div className="flex items-center gap-x-2">
-            </div>
-            <AddressForm initialData={house} houseId={house.id} />
-          <ImageForm initialData={house} houseId={house.id} />
-          <CategoryForm
+          <AddressForm initialData={house} houseId={house.id} />
+          <ImageForm
+            houseId={house.id}
+            initialImages={house.images.map((image) => image.url)}
+            />          
+            <CategoryForm
             initialData={house}
             houseId={house.id}
             options={categories.map((category) => ({
@@ -111,11 +103,8 @@ const HouseIdPage = async ({ params }: { params: { ownerHouseId: string } }) => 
               value: category.id,
             }))}
           />
-            <AreaForm initialData={house} houseId={house.id} />
-           
-           
-            <AttachmnetForm initialData={house} houseId={house.id} />
-          </div>
+          <AreaForm initialData={house} houseId={house.id} />
+          <AttachmnetForm initialData={house} houseId={house.id} />
         </div>
       </div>
     </div>

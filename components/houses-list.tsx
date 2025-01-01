@@ -3,6 +3,7 @@ import { HouseCard } from "./house-card"; // Ensure this path is correct
 
 type HouseWithCategory = House & {
   category: Category | null;
+  images: { url: string; id: string }[];
 };
 
 interface HousesListProps {
@@ -13,19 +14,24 @@ export const HousesList = ({ items }: HousesListProps) => {
   return (
     <div>
       <div className="grid sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-4">
-        {items.map((item) => (
-          <HouseCard
-            key={item.id}
-            id={item.id}
-            name={item.name!}
-            imageUrl={item.imageURL!}
-            price={item.rentalPrice!}
-            category={item.category?.name!}
-            address={item.address!}
-            roomArea={item.roomArea!}
-            createdAt={item.createdAt.toString()}
-          />
-        ))}
+        {items.map((item) => {
+          // Get the first image URL or fallback to a default image
+          const imageUrl = item.images.length > 0 ? item.images[0].url : "/default-image.jpg";
+          
+          return (
+            <HouseCard
+              key={item.id}
+              id={item.id}
+              name={item.name!}
+              images={item.images}  // Pass the images array to the HouseCard
+              price={item.rentalPrice!}
+              category={item.category?.name!}
+              address={item.address!}
+              roomArea={item.roomArea!}
+              createdAt={item.createdAt.toString()}
+            />
+          );
+        })}
       </div>
       {items.length === 0 && (
         <div className="text-center text-sm text-muted-foreground mt-10">

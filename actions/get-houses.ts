@@ -1,4 +1,5 @@
 import { db } from "@/lib/db";
+import { boolean } from "zod";
 
 interface GetHousesParams {
   name?: string;
@@ -15,11 +16,12 @@ export const getHouses = async ({ name, categoryId }: GetHousesParams) => {
         },
         categoryId,
         
+        
       },
       
       include: {
         category: true,
-        
+        images:true
       },
       
       orderBy: {

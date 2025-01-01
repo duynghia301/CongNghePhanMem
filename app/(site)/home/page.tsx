@@ -10,6 +10,7 @@ interface SearchParamsProps {
   searchParams: {
     name?: string;
     categoryId?: string;
+    images:boolean;
   };
 }
 
@@ -20,7 +21,7 @@ const Housess = async ({ searchParams }: SearchParamsProps) => {
       name: "asc",
     },
   });
-
+  
   const houses = await getHouses({
     ...searchParam,
   });

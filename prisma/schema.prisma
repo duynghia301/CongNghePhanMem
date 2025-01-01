@@ -20,7 +20,7 @@ model House {
   roomArea Float?
 
   categoryId  String?
-  category    Category?    @relation(fields: [categoryId], references: [id],onDelete: Cascade)
+  category    Category?    @relation(fields: [categoryId], references: [id])
 
 
   latitude          Float?
@@ -31,16 +31,24 @@ model House {
 
   attachments Attachment[]
   comments          Comment[]
-  status            HouseStatus @default(PENDING)  // Use Enum for better status management
+  images            HouseImage[] 
+
+  status            HouseStatus @default(PENDING)  
 
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
-
 
   @@index([categoryId])
   @@fulltext([name])
   @@unique([userId,id])
 
+}
+model HouseImage {
+  id       String  @id @default(uuid())
+  houseId  String
+  url      String  @db.Text
+  house    House   @relation(fields: [houseId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
 }
 
 enum HouseStatus {
@@ -54,8 +62,6 @@ model Category {
   name   String   @unique
   house House[]
 }
-
-
 
 enum UserRole {
   ADMIN  
@@ -72,12 +78,12 @@ model Comment {
   content           String
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
-  deleted           Boolean  @default(false)
+  deleted           Boolean  @default(false) // Soft delete flag
 
   house             House   @relation(fields: [houseId], references: [id])
 
-  @@index([houseId])
-  @@index([userId])  
+  @@index([houseId]) // Index for faster lookups based on houseId
+  @@index([userId])  // Index for faster lookups based on userId
 }
 model Attachment {
   id        String   @id @default(uuid())
@@ -90,5 +96,5 @@ model Attachment {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@index([houseId])  
+  @@index([houseId])  // Index for faster filtering by houseId
 }

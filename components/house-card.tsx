@@ -6,7 +6,7 @@ import { formatDistanceToNow } from "date-fns";
 interface HouseCardProps {
   id: string;
   name: string;
-  imageUrl: string;
+  images: { url: string; id: string }[];  // List of images
   price: number;
   category: string;
   createdAt: string;
@@ -17,19 +17,22 @@ interface HouseCardProps {
 export const HouseCard = ({
   id,
   name,
-  imageUrl,
+  images = [],  // Default to empty array
   price,
   category,
   createdAt,
   address,
-  roomArea // Add roomArea to the component props
+  roomArea 
 }: HouseCardProps) => {
   // Convert createdAt to a Date object
   const createdDate = new Date(createdAt);
-
+  
   // Check if the createdDate is valid
   const isValidDate = !isNaN(createdDate.getTime());
-
+  
+  // Get the first image URL from the images array
+  const imageUrl = images.length > 0 ? images[0].url : "/default-image.jpg";  // Use first image or default image
+  
   return (
     <div className="shadow-sm hover:shadow-md">
       <Link href={`/housePublished/${id}`}>
@@ -39,7 +42,7 @@ export const HouseCard = ({
               fill
               className="object-cover"
               alt={name}
-              src={imageUrl}
+              src={imageUrl}  // Use the first image as the main image
             />
           </div>
           <div className="flex flex-col pt-2">
@@ -62,7 +65,6 @@ export const HouseCard = ({
             </p>
             {isValidDate && (
               <p className="text-xs text-muted-foreground">
-                
                 {formatDistanceToNow(createdDate, { addSuffix: true })}
               </p>
             )}

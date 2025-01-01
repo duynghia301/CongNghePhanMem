@@ -7,6 +7,7 @@ import CopyPhoneNumber from "./_components/CoppyPhone";
 import HouseDetails from "./_components/HouseDetails";
 import HouseDescription from "./_components/HouseDescription";
 import HouseAttachments from "./_components/HouseAttachments";
+import Slideshow from "./_components/Slideshow";
 
 const HouseDetailPage = async ({ params }: { params: { housepublisedId: string } }) => {
   const house = await db.house.findUnique({
@@ -15,11 +16,12 @@ const HouseDetailPage = async ({ params }: { params: { housepublisedId: string }
       status: "APPROVED", // Only approved houses
     },
     include: {
-      category: true, // Include category relation
+      category: true, 
+      images: true,  
       attachments: {
         orderBy: {
-          createdAt: "desc", // Order attachments by created date
-        },
+          createdAt: "desc", 
+        },   
       },
     },
   });
@@ -34,13 +36,8 @@ const HouseDetailPage = async ({ params }: { params: { housepublisedId: string }
       
       {/* Image Section */}
       <div>
-        <Image
-          src={house.imageURL || "/default-image.jpg"} 
-          alt={house.name}
-          width={600}
-          height={600}
-          className="w-100 h-96 object-cover rounded-md"
-        />
+      <Slideshow images={house.images.map((img) => ({ url: img.url, id: img.id }))} />
+
       </div>
 
       {/* Name and Category Section */}

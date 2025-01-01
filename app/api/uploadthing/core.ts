@@ -11,9 +11,10 @@ const handleAuth = async () => {
 
 export const ourFileRouter = {
 
-  houseImage:f({image:{maxFileSize:"4MB", maxFileCount :13}})
+  houseImage:f({image:{maxFileSize:"4MB", maxFileCount :10}})
     .middleware(()=>handleAuth())
     .onUploadComplete(()=>{}),
+
   houseAttachment: f(["text","image","video","audio","pdf"])
     .middleware(()=> handleAuth())
     .onUploadComplete(()=>{}),
