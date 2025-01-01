@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 interface FacilityFormProps {
   initialData?: { name: string; type: string; value: string };

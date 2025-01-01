@@ -22,7 +22,6 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { BiSearch } from "react-icons/bi";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];

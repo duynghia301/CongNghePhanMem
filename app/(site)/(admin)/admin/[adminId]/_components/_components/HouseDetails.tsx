@@ -1,4 +1,3 @@
-// components/HouseDetails.tsx
 import { FaMapMarkerAlt, FaClock } from "react-icons/fa";
 import { formatPrice } from "@/lib/format";
 import { formatDistanceToNow } from "date-fns";

@@ -1,7 +1,6 @@
 // pages/housePublished/[housepublisedId].tsx
 import { db } from "@/lib/db";
 import { redirect } from "next/navigation";
-import Image from "next/image";
 
 import CopyPhoneNumber from "./_components/CoppyPhone";
 import HouseDetails from "./_components/HouseDetails";
@@ -10,9 +9,10 @@ import HouseAttachments from "./_components/HouseAttachments";
 import Slideshow from "./_components/Slideshow";
 
 const HouseDetailPage = async ({ params }: { params: { housepublisedId: string } }) => {
+  const {housepublisedId} = await params
   const house = await db.house.findUnique({
     where: {
-      id: params.housepublisedId,
+      id: housepublisedId,
       status: "APPROVED", // Only approved houses
     },
     include: {
@@ -27,10 +27,9 @@ const HouseDetailPage = async ({ params }: { params: { housepublisedId: string }
   });
 
   if (!house) {
-    return redirect("/"); // Redirect if no house found
+    return redirect("/"); 
   }
-  const phoneNumber = house.phone || "None"; // Default phone number
-
+  const phoneNumber = house.phone || "None"; 
   return (
     <div className="container mx-auto p-6 pt-[100px] pl-[100px] space-y-8 border"> 
       

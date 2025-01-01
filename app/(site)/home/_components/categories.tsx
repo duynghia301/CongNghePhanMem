@@ -17,8 +17,8 @@ import { IconType } from "react-icons";
 import { CategoryItem } from "./category-item";
 
 const iconMap: Record<Category["name"], IconType> = {
-  "Nội thất Cao Cấp": FcVip,
-  "Nội thất thường": FcAddImage,
+  "Nội thất cao cấp": FcVip,
+  "Nội thất thường": FcHome,
   "Nội thất trống": FcEmptyFilter,
 };
 

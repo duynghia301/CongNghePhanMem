@@ -65,7 +65,7 @@ export const HouseCard = ({
             </p>
             {isValidDate && (
               <p className="text-xs text-muted-foreground">
-                {formatDistanceToNow(createdDate, { addSuffix: true })}
+             {formatDistanceToNow(createdDate, { addSuffix: true })}
               </p>
             )}
           </div>

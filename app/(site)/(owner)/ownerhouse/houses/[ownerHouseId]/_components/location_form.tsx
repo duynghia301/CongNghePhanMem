@@ -1,6 +1,6 @@
 "use client";
 
-export const LocationForm = ({ initialData, houseId }: { initialData: any; houseId: string }) => {
+export const LocationForm = ({ initialData }: { initialData: any; houseId: string }) => {
     return (
       <form>
         <label htmlFor="latitude" className="block text-sm font-medium text-gray-700">

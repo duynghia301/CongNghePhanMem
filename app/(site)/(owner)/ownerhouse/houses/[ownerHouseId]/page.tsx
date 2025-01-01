@@ -4,7 +4,6 @@ import { redirect } from "next/navigation";
 
 import { ImageForm } from "./_components/image-form";
 import { AddressForm } from "./_components/adress_form";
-import { LocationForm } from "./_components/location_form";
 import { PhoneForm } from "./_components/PhoneForm";
 import { PriceForm } from "./_components/price_form";
 import { AreaForm } from "./_components/roomArea_form";

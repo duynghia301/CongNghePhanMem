@@ -4,13 +4,12 @@ import { Categories } from "./_components/categories";
 import { getHouses } from "@/actions/get-houses";
 import { HousesList } from "@/components/houses-list";
 import { SearchInput } from "@/app/components/searchI-input";
-import Navbar from "@/app/components/navbar/Navbar";
 
 interface SearchParamsProps {
   searchParams: {
     name?: string;
     categoryId?: string;
-    images:boolean;
+    images?:boolean;
   };
 }
 

@@ -135,7 +135,7 @@ const Footer = () => {
             <div className="w-full px-4 md:w-1/3 lg:w-1/2">
               <div className=" flex justify-center">
                 <p className="text-base text-gray-7 mr-[50px]">
-                  Designed and Developed by Group 6 UEF"
+                  Designed and Developed by Group 6 UEF
                   
                 </p>
               </div>

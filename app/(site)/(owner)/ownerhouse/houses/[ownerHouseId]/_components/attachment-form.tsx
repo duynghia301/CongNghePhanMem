@@ -129,7 +129,7 @@ export const AttachmnetForm = ({ initialData, houseId }: AttachmnetFormProps) =>
                         endpoint="houseAttachment"
                         onChange={(url) => {
                             if (url) {
-                                setValue("url", url);
+                                setValue("url",url[0]);
                                 handleSubmit(onSubmit)();
                             }
                         }}

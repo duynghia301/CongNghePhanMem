@@ -1,4 +1,3 @@
-// components/HouseAttachments.tsx
 import Image from "next/image";
 
 interface HouseAttachmentsProps {

@@ -25,6 +25,7 @@ const HouseDescription = ({ description }: HouseDescriptionProps) => {
   return (
     <div className="mt-6">
       {/* Use Preview component to show the description with formatting */}
+      <p className="font-semibold">Mô tả chi tiết</p>
       <Preview value={isFullDescription ? description : truncateDescription(description)} />
       
       {description && description.length > 150 && (
